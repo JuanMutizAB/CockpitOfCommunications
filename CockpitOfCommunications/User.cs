@@ -11,10 +11,9 @@ public class User
 	private string password { get; set; }
 	private DateTime birthDate { get; set; }
 	private int taxId { get; set; }
-	private string imageURL { get; set; }
     private List<UserCaracteristics> caracteristics { get; set; }
 
-    public User(int id, string name, string email, string password, DateTime birthDate, int taxId, string imageURL, List<UserCaracteristics> caracteristics)
+    public User(int id, string name, string email, string password, DateTime birthDate, int taxId, List<UserCaracteristics> caracteristics)
     {
         this.id = id;
         this.name = name;
@@ -22,7 +21,6 @@ public class User
         this.password = password;
         this.birthDate = birthDate;
         this.taxId = taxId;
-        this.imageURL = imageURL;
         this.caracteristics = caracteristics.Add(UserCaracteristics.isActive);
     }
 
