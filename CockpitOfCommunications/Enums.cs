@@ -1,3 +1,4 @@
+
 public enum CampaignStatus
 {
     New,

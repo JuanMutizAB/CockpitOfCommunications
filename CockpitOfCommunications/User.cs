@@ -120,8 +120,9 @@ public class User
         this.password = HashPassword(password);
         this.birthDate = birthDate;
         this.taxId = taxId;
+        this.imageURL = imageURL;
         this.caracteristics = caracteristics;
-		this.caracteristics.Add(UserCaracteristics.isActive);
+		    this.caracteristics.Add(UserCaracteristics.isActive)
     }
 
     private string HashPassword(string password)
@@ -129,5 +130,6 @@ public class User
         byte[] bytes = SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(password));
         return Convert.ToHexString(bytes).ToLower();
     }
+
 
 }
