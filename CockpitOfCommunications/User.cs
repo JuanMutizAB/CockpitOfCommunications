@@ -120,9 +120,8 @@ public class User
         this.password = HashPassword(password);
         this.birthDate = birthDate;
         this.taxId = taxId;
-        this.imageURL = imageURL;
         this.caracteristics = caracteristics;
-		    this.caracteristics.Add(UserCaracteristics.isActive)
+		this.caracteristics.Add(UserCaracteristics.isActive);
     }
 
     private string HashPassword(string password)
