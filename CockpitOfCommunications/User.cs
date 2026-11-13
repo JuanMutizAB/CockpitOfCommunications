@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 
 
 public class User
@@ -74,7 +75,7 @@ public class User
 			if (!value.Any(c => !char.IsLetterOrDigit(c)))
 				throw new FormatException("Password must contain at least one special character.");
 
-			_password = value;
+			_password = HashPassword(value);
 		}
 	}
 
@@ -98,12 +99,25 @@ public class User
 			if (string.IsNullOrWhiteSpace(value))
 				throw new ArgumentNullException(nameof(taxId), "Tax ID cannot be null or empty.");
 
-    public User(int id, string name, string email, string password, DateTime birthDate, int taxId, List<UserCaracteristics> caracteristics)
+			if (value.Length != 9 || !value.All(char.IsDigit))
+				throw new FormatException("Tax ID must have exactly 9 digits.");
+
+			_taxId = value;
+		}
+	}
+
+    private List<UserCaracteristics> caracteristics
+    {
+        get => _caracteristics;
+        set => _caracteristics = value;
+    }
+
+    public User(int id, string name, string email, string password, DateTime birthDate, string taxId, List<UserCaracteristics> caracteristics)
     {
         this.id = id;
         this.name = name;
         this.email = email;
-        this.password = password;
+        this.password = HashPassword(password);
         this.birthDate = birthDate;
         this.taxId = taxId;
         this.imageURL = imageURL;
@@ -111,7 +125,11 @@ public class User
 		    this.caracteristics.Add(UserCaracteristics.isActive)
     }
 
+    private string HashPassword(string password)
+    {
+        byte[] bytes = SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(password));
+        return Convert.ToHexString(bytes).ToLower();
+    }
 
 
 }
-
