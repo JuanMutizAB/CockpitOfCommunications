@@ -1,6 +1,7 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Security.Cryptography;
 
 
 public class User
@@ -74,7 +75,7 @@ public class User
 			if (!value.Any(c => !char.IsLetterOrDigit(c)))
 				throw new FormatException("Password must contain at least one special character.");
 
-			_password = value;
+			_password = HashPassword(value);
 		}
 	}
 
@@ -98,16 +99,20 @@ public class User
 			if (string.IsNullOrWhiteSpace(value))
 				throw new ArgumentNullException(nameof(taxId), "Tax ID cannot be null or empty.");
 
-	private int id { get; set; }
-	private string name { get; set; }
-	private string email { get; set; }
-	private string password { get; set; }
-	private DateTime birthDate { get; set; }
-	private int taxId { get; set; }
-	private string imageURL { get; set; }
-    private List<UserCaracteristics> caracteristics { get; set; }
+			if (value.Length != 9 || !value.All(char.IsDigit))
+				throw new FormatException("Tax ID must have exactly 9 digits.");
 
-    public User(int id, string name, string email, string password, DateTime birthDate, int taxId, string imageURL, List<UserCaracteristics> caracteristics)
+			_taxId = value;
+		}
+	}
+
+    private List<UserCaracteristics> caracteristics
+    {
+        get => _caracteristics;
+        set => _caracteristics = value;
+    }
+
+    public User(int id, string name, string email, string password, DateTime birthDate, string taxId, List<UserCaracteristics> caracteristics)
     {
         this.id = id;
         this.name = name;
@@ -115,10 +120,14 @@ public class User
         this.password = password;
         this.birthDate = birthDate;
         this.taxId = taxId;
-        this.imageURL = imageURL;
-        this.caracteristics = caracteristics.Add(UserCaracteristics.isActive);
+        this.caracteristics = caracteristic
+		this.caracteristics.Add(UserCaracteristics.isActive);
     }
 
+    private string HashPassword(string password)
+    {
+        byte[] bytes = SHA256.HashData(System.Text.Encoding.UTF8.GetBytes(password));
+        return Convert.ToHexString(bytes).ToLower();
+    }
 
 }
-
